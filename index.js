@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const connectString = process.env.connectString
 
 app.get('/', (req,res)=>{
@@ -17,6 +18,9 @@ const corsSpefic = {
     origin: '*',
     optionsSuccessStatus: 200,
   };
+
+//   use file upload 
+app.use(fileUpload())
 
  // Use CORS middleware
  app.use(cors(corsSpefic));
@@ -54,12 +58,37 @@ const blogModel = new mongoose.model('createBlog', blogSchema)
 
 // create what will be posted
 app.post('/api/v1/createBlog', async(req,res)=>{
-    const {image, topic, content} = req.body
+
+    const {topic, content} = req.body
     if(!topic || !content){
         res.json({error: "please input all credential before posting"})
     }
 
-    const newBlog = await blogModel.create({image, topic, content})
+    let blogFile;
+    let uploadPath;
+    let fileName;
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        res.status(400).send('No files were uploaded.');
+        return;
+      }
+      console.log('req.files >>>', req.files); // eslint-disable-line
+
+        blogFile = req.files.image;
+        // file name with date (this is optional and not neccessary)
+        fileName = '/uploads/' + new Date().getTimezoneOffset() + blogFile.name;
+
+        uploadPath = __dirname + '/uploads/' + blogFile.name;
+
+        blogFile.mv(uploadPath, function(err) {
+            if (err) {
+                return res.status(500).send(err);
+                }
+        })
+    
+    
+
+    const newBlog = await blogModel.create({image:uploadPath, topic, content})
     res.json({newBlog}) 
     
 })
