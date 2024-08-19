@@ -93,7 +93,7 @@ app.post('/api/v1/createBlog', async(req,res)=>{
     
 })
 
-// to get individual blog post through the header
+// to get individual blog post using the topic
 app.get('/api/v1/topic/:topic', async(req,res)=>{
 
     const {topic} = req.params
