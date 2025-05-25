@@ -28,7 +28,7 @@ const tabs = [
   { id: 8, name: "finance", iconName: card },
   { id: 9, name: "Manage subscription", iconName: subManagement },
   { id: 10, name: "Help/platform feedback", iconName: help },
-  { id: 11, name: "settings", iconName: settings },
+  { id: 11, name: "settings", iconName: settings,  },
 ];
 
 const Sidebar = () => {
@@ -54,7 +54,7 @@ const Sidebar = () => {
         <div>
           <ul className="m-6">
             {tabs.map((tab) => (
-              <li key={tab.id} className="flex items-center gap-2 p-2 m-2">
+              <li key={tab.id} className="flex items-center gap-2 p-2 m-2 cursor-pointer">
                 <img src={tab.iconName} alt="" className="w-[25px]" />
                 {tab.name}
               </li>
